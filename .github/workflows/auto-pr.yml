@@ -1,0 +1,31 @@
+name: Auto Pull Request on Main Commit
+
+on:
+  push:
+    branches:
+      - main  # Triggers on every commit to main
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create New Branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b auto-pr-$(date +%s)
+          git push origin auto-pr-$(date +%s)
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: auto-pr-$(date +%s)
+          base: main
+          title: "Automated PR for latest main changes"
+          body: "This PR was auto-generated after a commit to main."
+          labels: "automated-pr"
