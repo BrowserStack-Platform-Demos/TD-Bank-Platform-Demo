@@ -5,6 +5,10 @@ on:
     branches:
       - main  # Triggers on every commit to main
 
+permissions:
+  contents: write  # Grants permission to push to the repo
+  pull-requests: write  # Grants permission to create PRs
+
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
